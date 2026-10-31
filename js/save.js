@@ -1,14 +1,16 @@
+import {OFFENSE,DEFENSE} from './positions.js';
 import {freshProgress,validateProgress} from './progression.js';
 export {schedule,standings,settleRound} from './league.js';
 import {TEAMS,clamp} from './data.js';
 const KEY='flag-save-v1';
-export const defaults=()=>({version:2,progress:freshProgress(),name:'Belton',number:16,venue:'night',camera:'broadcast',difficulty:'pro',duration:60,home:0,away:1,sound:false,season:null,stats:{played:0,wins:0,touchdowns:0}});
+export const defaults=()=>({version:2,offensePosition:'QB',defensePosition:'MLB',progress:freshProgress(),name:'Belton',number:16,venue:'night',camera:'broadcast',difficulty:'pro',duration:60,home:0,away:1,sound:false,season:null,stats:{played:0,wins:0,touchdowns:0}});
 export function validate(raw){
  const d=defaults(); if(!raw||typeof raw!=='object')return d;
  for(const k of ['name'])if(typeof raw[k]==='string')d[k]=raw[k].replace(/[<>]/g,'').slice(0,18)||'Belton';
  for(const [k,values] of Object.entries({venue:['night','day','sunset'],camera:['broadcast','close','wide'],difficulty:['rookie','pro','elite']}))if(values.includes(raw[k]))d[k]=raw[k];
  for(const k of ['number','home','away'])if(Number.isFinite(raw[k]))d[k]=clamp(Math.round(raw[k]),0,k==='number'?99:7);
  if([30,60,120].includes(raw.duration))d.duration=raw.duration;
+ for(const [key,unit] of [['offensePosition',OFFENSE],['defensePosition',DEFENSE]])if(raw[key]===''||unit.includes(raw[key]))d[key]=raw[key];
  d.sound=raw.sound===true;
  for(const k of Object.keys(d.stats))if(Number.isFinite(raw.stats?.[k]))d.stats[k]=clamp(Math.floor(raw.stats[k]),0,1e7);
  d.progress=validateProgress(raw.progress);

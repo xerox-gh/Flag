@@ -73,7 +73,7 @@ export class World{
  }
  render(match,dt,settings,menu=false){
   this.clock+=dt;
-  const dir=direction(match.visualDrive.offense),focus=match.options.playerPosition&&match.onField?match.players[match.controlled]:match.ball||match.players[match.carrier]||match.players[match.controlled];
+  const dir=direction(match.visualDrive.offense),focus=match.activePosition&&match.onField?match.players[match.controlled]:match.ball||match.players[match.carrier]||match.players[match.controlled];
   this.scrimmage.position.z=match.phase==='dead'?this.scrimmage.position.z:match.drive.spot;this.firstdown.position.z=match.phase==='dead'?this.firstdown.position.z:match.drive.target;
   this.line.visible=!menu;this.routes.visible=match.phase==='pre'&&!menu;
   match.players.forEach((p,i)=>{const m=this.models[i];m.root.position.set(p.x,0,p.z);m.body.rotation.y=p.angle;m.body.position.y=Math.abs(Math.sin(p.gait*1.5))*(Math.hypot(p.vx,p.vz)>.1?.07:0);m.body.rotation.z=p.juke>0?Math.sin(p.juke*12)*.3:0;const swing=Math.sin(p.gait*1.7)*.7;const moving=Math.hypot(p.vx,p.vz)>.1&&match.phase==='live';m.legs.forEach((leg,n)=>leg.rotation.x=moving?swing*(n?1:-1):0);m.arms.forEach((arm,n)=>arm.rotation.x=i===match.carrier?(n?-.6:-.95):moving?swing*(n?-1:1):.08);if(match.phase==='dead'&&match.lastEnding?.type==='touchdown'&&p.team===match.lastOffense)m.arms.forEach(a=>a.rotation.x=-2.5);m.label.visible=!menu&&match.drive.offense===0&&p.team===0&&RECEIVERS.includes(p.slot)&&match.carrier===0&&!match.passed;});

@@ -91,3 +91,10 @@ Player Career supports QB, RB, WR, TE, LT, LG, C, RG, RT, DE, DT, OLB, MLB, CB, 
 - Defense: cover receivers or rush the passer; E tackles a nearby ball carrier. Proximity to a pass landing point can produce an interception.
 
 Team-controlled modes still switch to the receiver after catches. Player Careers remain locked to their position. Touch controls expose the matching action. This is arcade 11-on-11 football with automatic extra points and simulated punts, not a full NFL penalty/special-teams rules simulation.
+
+### Two-way position control and expanded playbooks
+Every match starts with separate offense and defense position choices, including Team Control. Player Career defaults to your pro position on its unit; choose a second role for the other unit. Change the active position before any snap. This changes match control, not the saved career player or card position.
+
+Choose from 30 offensive plays (quick passes, crossers, sideline concepts, deep routes, screens, and eight runs) and 30 defensive calls (man, zone, blitz, contain, and situational). The play-type filter and scrolling cards keep both playbooks accessible on mobile. Run calls hand off automatically; QB keeps retain possession. Coverage calls change rush assignments, alignment, depth, and coverage behavior.
+
+Validation: 36 automated tests, including all two-way position pairs, playbook integrity, possession switching, and simulations of every offensive call.
