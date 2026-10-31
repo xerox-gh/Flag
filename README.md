@@ -64,3 +64,15 @@ Season results and settings save to this browser/device. An unfinished match doe
 ## Validation
 
 Node regression tests cover drive direction, first downs, incomplete passes, turnovers, scoring, punts, pass eligibility and receiver control, training resets, an entire accelerated match, all 28 league fixtures, seven-week season settlement, corrupt saves, and storage failure. Browser smoke checks cover the software-rendered field, play calling, passing/interception, menus, pause/exit, and season setup. The preview environment disables WebGL, so the Three.js rendering path and physical mobile-device/cross-browser performance still need testing on a graphics-enabled device.
+
+## Ultimate Team and Career update
+
+**Ultimate Team** has 64 collectible card versions across Bronze, Silver, Gold, Elite, Hero, Icon, Glory and Eternal. Start with 1,500 coins and a valid five-player squad (QB, two WRs, RB, DB). Open three-player Scout/Pro/Legends packs, view per-card rarity odds, collect duplicate coin refunds, filter owned cards, equip your lineup, and play an independent seven-week UT league. Only completed UT/Career matches award coins; quitting does not. Rewards and fixture results settle once. Season champions receive a bonus; another UT season can start after week seven.
+
+**Club Career** keeps its own roster, transfer budget, fixtures and history. Sign players directly for displayed prices, select your starting five, play every fixture, and carry your club into another year. **Player Career** creates a QB, with team-controlled games, XP, skill points and training (+2 to an attribute per point, capped at 99). Your pro starts at QB, and can also be equipped in Ultimate Team. End-of-season moves let you stay or transfer to another club: the pro's XP/stats/history remain, while transferring resets teammates and the club budget before the new-season grant. This is a QB development career, not an individual-player-lock mode.
+
+Cards affect actual movement speed, throwing velocity/accuracy, catch reach, flag-pull reach and sprint stamina. Career squads and the Ultimate Team collection remain separate. All players are fictional. Packs use only earned in-game coins, with no payments or online trading. Card rarity odds are shown in the pack store; every draw is independent and there is no guaranteed rarity slot.
+
+Old settings, stats and the original Season mode survive save migration. New data is stored under the existing local save key with version 2; invalid card IDs and lineups are repaired, invalid fixture sequences are reset, and unknown career data is rejected. Pending matches are not restored after reload, so the fixture can be retried without receiving an unfinished-match reward. Career resets require confirmation and do not erase the other career or card collection.
+
+New modules: `js/progression.js` (cards, economy and career rules), `js/progression-ui.js` (mode menus), and `js/league.js` (shared fixture helpers). `tests/progression.test.js` adds pack, collection, economy, full-season, transfer, save migration, and engine-attribute tests. The complete suite now contains 22 passing tests.
