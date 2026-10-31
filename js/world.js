@@ -1,3 +1,4 @@
+import {RECEIVERS,TEAM_SIZE} from './positions.js';
 import * as THREE from '../libs/three.module.js';
 import {TEAMS,PLAYS} from './data.js';
 import {direction} from './rules.js';
@@ -37,30 +38,30 @@ export class World{
   for(const color of crowdColors){const inst=new THREE.InstancedMesh(new THREE.BoxGeometry(.65,.9,.65),mat(color),250);const matrix=new THREE.Matrix4();for(let i=0;i<250;i++){const side=i%2?1:-1,row=Math.floor(Math.random()*5);matrix.makeTranslation(side*(34+row*3)+(Math.random()-.5)*1.5,1.2+row*1.5,-15+Math.random()*130);inst.setMatrixAt(i,matrix);}this.decor.add(inst);}
   for(const x of [-40,40])for(const z of [-12,112]){this.decor.add(box(.7,25,.7,'#8a9e96',x,12,z));this.decor.add(box(7,2,1,'#495b56',x,24,z));const lamp=box(6.6,1.4,.2,mat('#f5ffe8',{emissive:'#deedcd',emissiveIntensity:1.4}),x,24,z+(z<0?.7:-.7));this.decor.add(lamp);}
   for(let i=0;i<24;i++){const height=8+(i*17%34),x=(i-12)*9;const building=box(6,height,8,'#1a302e',x,height/2,153+Math.sin(i)*8);this.decor.add(building);for(let floor=3;floor<height;floor+=4)this.decor.add(box(3,.5,.05,mat('#537364',{emissive:'#506d50',emissiveIntensity:.4}),x,floor,148.9+Math.sin(i)*8));}
-  this.decor.add(box(25,8,1,'#101d1b',0,15,129));const board=new THREE.Mesh(new THREE.PlaneGeometry(23,5.75),new THREE.MeshBasicMaterial({map:textTexture('FLAG / 5v5','#ceff63','#15261e')}));board.position.set(0,15,128.4);board.rotation.y=Math.PI;this.decor.add(board);
+  this.decor.add(box(25,8,1,'#101d1b',0,15,129));const board=new THREE.Mesh(new THREE.PlaneGeometry(23,5.75),new THREE.MeshBasicMaterial({map:textTexture('FLAG / 11v11','#ceff63','#15261e')}));board.position.set(0,15,128.4);board.rotation.y=Math.PI;this.decor.add(board);
  }
  buildBall(){this.ball=new THREE.Group();const leather=new THREE.Mesh(new THREE.SphereGeometry(.32,12,8),mat('#9e4d28'));leather.scale.set(1,1,1.65);leather.castShadow=true;this.ball.add(leather);for(const z of [-.27,.27])this.ball.add(box(.35,.04,.06,'#f3e6cb',0,.29,z));for(let i=0;i<4;i++)this.ball.add(box(.14,.035,.035,'#fff1d3',0,.32,-.12+i*.08));this.scene.add(this.ball);}
  playerModel(team,slot,settings){
-  const root=new THREE.Group(),body=new THREE.Group();root.add(body);const kit=mat(team.color),shorts=mat(team.dark),skin=mat(['#9e6748','#d59b70','#78492f','#bd835b','#613f2b'][slot]);
+  const root=new THREE.Group(),body=new THREE.Group();root.add(body);const kit=mat(team.color),shorts=mat(team.dark),skin=mat(['#9e6748','#d59b70','#78492f','#bd835b','#613f2b'][slot%5]);
   const torso=box(.88,1.05,.5,kit,0,1.55);torso.castShadow=true;body.add(torso);const waist=box(.84,.35,.52,shorts,0,.94);body.add(waist);
   const head=new THREE.Mesh(new THREE.SphereGeometry(.32,10,8),skin);head.position.set(0,2.35,0);head.scale.y=1.1;head.castShadow=true;body.add(head);
   const hair=new THREE.Mesh(new THREE.SphereGeometry(.335,8,6,0,Math.PI*2,0,Math.PI*.49),mat(slot%2?'#34251d':'#201e1b'));hair.position.set(0,2.44,0);body.add(hair);
-  const band=box(.63,.08,.51,shorts,0,2.48,.025);body.add(band);
+  const helmet=new THREE.Mesh(new THREE.SphereGeometry(.39,10,8,0,Math.PI*2,0,Math.PI*.66),shorts);helmet.position.set(0,2.40,0);body.add(helmet);for(const y of [2.22,2.34])body.add(box(.62,.04,.04,'#d2d8d4',0,y,.39));
   for(const x of [-.12,.12])body.add(box(.055,.055,.045,'#201b16',x,2.36,.3));
   const arms=[],legs=[];
   for(const side of [-1,1]){
    const arm=new THREE.Group();arm.position.set(side*.58,1.91,0);arm.add(box(.28,.36,.34,kit,0,-.13));arm.add(box(.22,.57,.25,skin,0,-.54,.025));arm.add(box(.24,.22,.26,skin,0,-.89,.03));body.add(arm);arms.push(arm);
    const leg=new THREE.Group();leg.position.set(side*.23,.91,0);leg.add(box(.31,.33,.36,shorts,0,-.1));leg.add(box(.22,.42,.24,skin,0,-.42));leg.add(box(.24,.21,.27,'#e3e8d9',0,-.65));leg.add(box(.29,.18,.48,'#111b17',0,-.83,.08));body.add(leg);legs.push(leg);
-   const flag=box(.13,.55,.05,mat('#ffdb57',{side:THREE.DoubleSide}),side*.51,.72,0);flag.rotation.z=side*.2;body.add(flag);
+   body.add(box(.30,.35,.56,kit,side*.49,1.94,0));
   }
-  const number=slot===0?settings.number:[11,80,7,24][slot-1];const decal=new THREE.Mesh(new THREE.PlaneGeometry(.5,.43),new THREE.MeshBasicMaterial({map:textTexture(String(number),team.dark,null,128,128),transparent:true}));decal.position.set(0,1.65,.257);body.add(decal);const back=decal.clone();back.rotation.y=Math.PI;back.position.z=-.257;body.add(back);
+  const number=slot===0?settings.number:[11,80,7,87,72,65,55,66,74,19][slot-1];const decal=new THREE.Mesh(new THREE.PlaneGeometry(.5,.43),new THREE.MeshBasicMaterial({map:textTexture(String(number),team.dark,null,128,128),transparent:true}));decal.position.set(0,1.65,.257);body.add(decal);const back=decal.clone();back.rotation.y=Math.PI;back.position.z=-.257;body.add(back);
   const shadow=new THREE.Mesh(new THREE.CircleGeometry(.65,16),new THREE.MeshBasicMaterial({color:'#102017',transparent:true,opacity:.25,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=.03;root.add(shadow);
-  const label=new THREE.Sprite(new THREE.SpriteMaterial({map:textTexture(slot?String(slot):'QB','#18251c','#d3ff68',128,128),depthTest:false,transparent:true}));label.position.y=3.35;label.scale.set(.9,.9,1);root.add(label);
+  const label=new THREE.Sprite(new THREE.SpriteMaterial({map:textTexture(slot?String(RECEIVERS.indexOf(slot)+1):'QB','#18251c','#d3ff68',128,128),depthTest:false,transparent:true}));label.position.y=3.35;label.scale.set(.9,.9,1);root.add(label);
   this.scene.add(root);return {root,body,arms,legs,label};
  }
  setTeams(home,away,settings){
   for(const m of this.models){this.scene.remove(m.root);m.root.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){o.material.map?.dispose();o.material.dispose();}});}this.models=[];this.teams=[TEAMS[home],TEAMS[away]];
-  for(let t=0;t<2;t++)for(let i=0;i<5;i++)this.models.push(this.playerModel(this.teams[t],i,settings));
+  for(let t=0;t<2;t++)for(let i=0;i<TEAM_SIZE;i++)this.models.push(this.playerModel(this.teams[t],i,settings));
   this.endzones.forEach((e,i)=>e.material.color.set(this.teams[1-i].dark));
   this.endTexts.forEach((t,i)=>{t.material.map.dispose();t.material.map=textTexture(this.teams[1-i].name.split(' ').at(-1).toUpperCase(),this.teams[1-i].color);t.material.needsUpdate=true;});
  }
@@ -68,14 +69,14 @@ export class World{
  clearRoutes(){for(const child of [...this.routes.children]){child.geometry.dispose();child.material.dispose();this.routes.remove(child);}}
  updateRoutes(match){
   this.clearRoutes();const dir=direction(match.drive.offense);if(match.drive.offense!==0)return;const play=PLAYS.find(p=>p.id===match.play);
-  play.paths.forEach((path,i)=>{const p=match.players[i+1];const points=[new THREE.Vector3(p.x,.16,p.z),...path.map(v=>new THREE.Vector3(Math.max(-23,Math.min(23,p.startX+v[0])),.16,Math.max(-5,Math.min(105,p.startZ+v[1]*dir))))];const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineDashedMaterial({color:i%2?'#dcecff':'#ddff72',dashSize:1,gapSize:.6,transparent:true,opacity:.8}));line.computeLineDistances();this.routes.add(line);});
+  play.paths.forEach((path,i)=>{const p=match.players[RECEIVERS[i]];const points=[new THREE.Vector3(p.x,.16,p.z),...path.map(v=>new THREE.Vector3(Math.max(-23,Math.min(23,p.startX+v[0])),.16,Math.max(-5,Math.min(105,p.startZ+v[1]*dir))))];const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineDashedMaterial({color:i%2?'#dcecff':'#ddff72',dashSize:1,gapSize:.6,transparent:true,opacity:.8}));line.computeLineDistances();this.routes.add(line);});
  }
  render(match,dt,settings,menu=false){
   this.clock+=dt;
-  const dir=direction(match.visualDrive.offense),focus=match.ball||match.players[match.carrier]||match.players[match.controlled];
+  const dir=direction(match.visualDrive.offense),focus=match.options.playerPosition&&match.onField?match.players[match.controlled]:match.ball||match.players[match.carrier]||match.players[match.controlled];
   this.scrimmage.position.z=match.phase==='dead'?this.scrimmage.position.z:match.drive.spot;this.firstdown.position.z=match.phase==='dead'?this.firstdown.position.z:match.drive.target;
   this.line.visible=!menu;this.routes.visible=match.phase==='pre'&&!menu;
-  match.players.forEach((p,i)=>{const m=this.models[i];m.root.position.set(p.x,0,p.z);m.body.rotation.y=p.angle;m.body.position.y=Math.abs(Math.sin(p.gait*1.5))*(Math.hypot(p.vx,p.vz)>.1?.07:0);m.body.rotation.z=p.juke>0?Math.sin(p.juke*12)*.3:0;const swing=Math.sin(p.gait*1.7)*.7;const moving=Math.hypot(p.vx,p.vz)>.1&&match.phase==='live';m.legs.forEach((leg,n)=>leg.rotation.x=moving?swing*(n?1:-1):0);m.arms.forEach((arm,n)=>arm.rotation.x=i===match.carrier?(n?-.6:-.95):moving?swing*(n?-1:1):.08);if(match.phase==='dead'&&match.lastEnding?.type==='touchdown'&&p.team===match.lastOffense)m.arms.forEach(a=>a.rotation.x=-2.5);m.label.visible=!menu&&match.drive.offense===0&&p.team===0&&p.slot>0&&match.carrier===0&&!match.passed;});
+  match.players.forEach((p,i)=>{const m=this.models[i];m.root.position.set(p.x,0,p.z);m.body.rotation.y=p.angle;m.body.position.y=Math.abs(Math.sin(p.gait*1.5))*(Math.hypot(p.vx,p.vz)>.1?.07:0);m.body.rotation.z=p.juke>0?Math.sin(p.juke*12)*.3:0;const swing=Math.sin(p.gait*1.7)*.7;const moving=Math.hypot(p.vx,p.vz)>.1&&match.phase==='live';m.legs.forEach((leg,n)=>leg.rotation.x=moving?swing*(n?1:-1):0);m.arms.forEach((arm,n)=>arm.rotation.x=i===match.carrier?(n?-.6:-.95):moving?swing*(n?-1:1):.08);if(match.phase==='dead'&&match.lastEnding?.type==='touchdown'&&p.team===match.lastOffense)m.arms.forEach(a=>a.rotation.x=-2.5);m.label.visible=!menu&&match.drive.offense===0&&p.team===0&&RECEIVERS.includes(p.slot)&&match.carrier===0&&!match.passed;});
   const selected=match.players[match.controlled];this.ring.position.set(selected.x,.1,selected.z);this.ring.visible=!menu;
   if(match.ball){this.ball.position.set(match.ball.x,match.ball.y,match.ball.z);this.ball.rotation.x+=dt*16;}else if(match.players[match.carrier]){const p=match.players[match.carrier];this.ball.position.set(p.x+Math.sin(p.angle)*.4,1.55,p.z+Math.cos(p.angle)*.4);this.ball.rotation.set(.3,p.angle,0);}
   this.ball.visible=match.phase!=='dead';

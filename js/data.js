@@ -15,3 +15,6 @@ export const PLAYS=[
 export const DEFENSES=[{id:'man',name:'MAN COVERAGE',tip:'Match up with each receiver'},{id:'zone',name:'ZONE SHELL',tip:'Protect space and react to the ball'},{id:'blitz',name:'PRESSURE',tip:'Send two rushers at the quarterback'}];
 export const NAMES=['Carter','Brooks','Hayes','Reed','Mason','Wright','Cole','Banks'];
 export const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+
+// Five eligible receiving targets: WR, WR, RB, TE, slot WR.
+for(const play of PLAYS)play.paths.push([[0,6],[12,17]]);
